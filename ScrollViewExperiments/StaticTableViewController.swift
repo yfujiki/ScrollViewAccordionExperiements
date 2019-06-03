@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ViewController: UIViewController {
+class StaticTableViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITableViewDataSource {
+extension StaticTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return colors.count
     }
@@ -62,7 +62,7 @@ extension ViewController: UITableViewDataSource {
     }
 }
 
-extension ViewController: UITableViewDelegate {
+extension StaticTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         for (index, targetRow) in targetRows.enumerated() {
             if (targetRow == indexPath.row) {
