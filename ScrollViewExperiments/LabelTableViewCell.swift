@@ -8,12 +8,10 @@
 
 import UIKit
 
-class ColorTableViewCell: UITableViewCell {
+class LabelTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var colorImageView: UIImageView!
-
-    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var contentTextLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
