@@ -37,10 +37,10 @@ class ViewController: UIViewController {
     ]
 
     private let targetFraction: CGFloat = 0.5
-    private let targetRow = 8
+    private let targetRows = [8, 10]
     private static let defaultRowHeight: CGFloat = 120
 
-    private var targetRowHeight: CGFloat = 0
+    private var targetRowsHeight: [CGFloat] = [0, 0]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,8 +64,10 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == targetRow) {
-            return targetRowHeight
+        for (index, targetRow) in targetRows.enumerated() {
+            if (targetRow == indexPath.row) {
+                return targetRowsHeight[index]
+            }
         }
 
         return type(of: self).defaultRowHeight // This is going to change for target cell
@@ -76,29 +78,32 @@ extension ViewController: UITableViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let targetCell = tableView.cellForRow(at: IndexPath(row: targetRow, section: 0))
-        guard let targetCellY = targetCell?.frame.minY else {
-            return
+        let targetCells = targetRows.compactMap { (targetRow) -> UITableViewCell? in
+            return tableView.cellForRow(at: IndexPath(row: targetRow, section: 0))
         }
 
-        NSLog("ContentOffset Y : \(tableView.contentOffset.y)")
+        for (index, targetCell) in targetCells.enumerated() {
+            let targetCellY = targetCell.frame.minY
 
-        let lastTargetRowHeight = targetRowHeight
-        if (tableView.contentOffset.y > targetCellY - targetFraction * tableView.frame.height) {
-            // ContentOffset is already big.
-            targetRowHeight = type(of: self).defaultRowHeight
-        } else if (tableView.contentOffset.y < targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight) {
-            // ContentOffset is small yet.
-            targetRowHeight = 0
-        } else {
-            let baseY = targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight
-            let diffY = tableView.contentOffset.y - baseY
+            NSLog("ContentOffset Y : \(tableView.contentOffset.y)")
 
-            targetRowHeight = min(diffY, type(of: self).defaultRowHeight)
-        }
+            let lastTargetRowHeight = targetRowsHeight[index]
+            if (tableView.contentOffset.y > targetCellY - targetFraction * tableView.frame.height) {
+                // ContentOffset is already big.
+                targetRowsHeight[index] = type(of: self).defaultRowHeight
+            } else if (tableView.contentOffset.y < targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight) {
+                // ContentOffset is small yet.
+                targetRowsHeight[index] = 0
+            } else {
+                let baseY = targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight
+                let diffY = tableView.contentOffset.y - baseY
 
-        if (lastTargetRowHeight != targetRowHeight) {
-            self.tableView.reloadRows(at: [IndexPath(row: self.targetRow, section: 0)], with: .none)
+                targetRowsHeight[index] = min(diffY, type(of: self).defaultRowHeight)
+            }
+
+            if (lastTargetRowHeight != targetRowsHeight[index]) {
+                self.tableView.reloadRows(at: [IndexPath(row: self.targetRows[index], section: 0)], with: .none)
+            }
         }
     }
 }
