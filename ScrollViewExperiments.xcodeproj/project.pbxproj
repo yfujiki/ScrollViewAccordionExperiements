@@ -13,6 +13,7 @@
 		DB1C321D22A42187001AFED2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB1C321C22A42187001AFED2 /* Assets.xcassets */; };
 		DB1C322022A42187001AFED2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB1C321E22A42187001AFED2 /* LaunchScreen.storyboard */; };
 		DB1C322B22A42187001AFED2 /* ScrollViewExperimentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1C322A22A42187001AFED2 /* ScrollViewExperimentsTests.swift */; };
+		DB1C323622A4CECC001AFED2 /* ColorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1C323522A4CECC001AFED2 /* ColorTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		DB1C322622A42187001AFED2 /* ScrollViewExperimentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScrollViewExperimentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB1C322A22A42187001AFED2 /* ScrollViewExperimentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewExperimentsTests.swift; sourceTree = "<group>"; };
 		DB1C322C22A42187001AFED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB1C323522A4CECC001AFED2 /* ColorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				DB1C321C22A42187001AFED2 /* Assets.xcassets */,
 				DB1C321E22A42187001AFED2 /* LaunchScreen.storyboard */,
 				DB1C322122A42187001AFED2 /* Info.plist */,
+				DB1C323522A4CECC001AFED2 /* ColorTableViewCell.swift */,
 			);
 			path = ScrollViewExperiments;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 			files = (
 				DB1C321822A42184001AFED2 /* ViewController.swift in Sources */,
 				DB1C321622A42184001AFED2 /* AppDelegate.swift in Sources */,
+				DB1C323622A4CECC001AFED2 /* ColorTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
