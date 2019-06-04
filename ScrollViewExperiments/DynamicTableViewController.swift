@@ -22,7 +22,9 @@ class DynamicTableViewController: UIViewController {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -33,8 +35,10 @@ class DynamicTableViewController: UIViewController {
     ]
 
     private let targetFraction: CGFloat = 0.5
-    private let targetRows = [8, 10]
     private var defaultRowsHeight = [IndexPath: CGFloat]()
+
+    private let targetRows = [8, 10]
+    private let targetRowsDefaultHeight: [CGFloat] = [120, 120]
     private var targetRowsHeight: [CGFloat] = [0, 0]
 
     override func viewDidLoad() {
@@ -50,10 +54,15 @@ extension DynamicTableViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! LabelTableViewCell
-        cell.contentTextLabel.text = texts[indexPath.row]
-
-        return cell
+        if (targetRows.contains(indexPath.row)) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCell")!
+            cell.backgroundColor = UIColor.yellow
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "LabelCell") as! LabelTableViewCell
+            cell.contentTextLabel.text = texts[indexPath.row]
+            return cell
+        }
     }
 }
 
@@ -63,6 +72,12 @@ extension DynamicTableViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        for (index, targetRow) in targetRows.enumerated() {
+            if indexPath.row == targetRow {
+                return targetRowsHeight[index]
+            }
+        }
+        
         return UITableView.automaticDimension
     }
 
@@ -80,23 +95,24 @@ extension DynamicTableViewController: UITableViewDelegate {
 
             NSLog("ContentOffset Y : \(tableView.contentOffset.y)")
 
-//            let lastTargetRowHeight = targetRowsHeight[index]
-//            if (tableView.contentOffset.y > targetCellY - targetFraction * tableView.frame.height) {
-//                // ContentOffset is already big.
-//                targetRowsHeight[index] = type(of: self).defaultRowHeight
-//            } else if (tableView.contentOffset.y < targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight) {
-//                // ContentOffset is small yet.
-//                targetRowsHeight[index] = 0
-//            } else {
-//                let baseY = targetCellY - targetFraction * tableView.frame.height - type(of: self).defaultRowHeight
-//                let diffY = tableView.contentOffset.y - baseY
-//
-//                targetRowsHeight[index] = min(diffY, type(of: self).defaultRowHeight)
-//            }
-//
-//            if (lastTargetRowHeight != targetRowsHeight[index]) {
-//                self.tableView.reloadRows(at: [IndexPath(row: self.targetRows[index], section: 0)], with: .none)
-//            }
+            let lastTargetRowHeight = targetRowsHeight[index]
+            let defaultHeight = targetRowsDefaultHeight[index]
+            if (tableView.contentOffset.y > targetCellY - targetFraction * tableView.frame.height) {
+                // ContentOffset is already big.
+                targetRowsHeight[index] = defaultHeight
+            } else if (tableView.contentOffset.y < targetCellY - targetFraction * tableView.frame.height - defaultHeight) {
+                // ContentOffset is small yet.
+                targetRowsHeight[index] = 0
+            } else {
+                let baseY = targetCellY - targetFraction * tableView.frame.height - defaultHeight
+                let diffY = tableView.contentOffset.y - baseY
+
+                targetRowsHeight[index] = min(diffY, defaultHeight)
+            }
+
+            if (lastTargetRowHeight != targetRowsHeight[index]) {
+                self.tableView.reloadRows(at: [IndexPath(row: self.targetRows[index], section: 0)], with: .none)
+            }
         }
     }
 }
