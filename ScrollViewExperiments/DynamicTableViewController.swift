@@ -77,7 +77,7 @@ extension DynamicTableViewController: UITableViewDelegate {
                 return targetRowsHeight[index]
             }
         }
-        
+
         return UITableView.automaticDimension
     }
 
@@ -90,6 +90,7 @@ extension DynamicTableViewController: UITableViewDelegate {
             return tableView.cellForRow(at: IndexPath(row: targetRow, section: 0))
         }
 
+        var indexPathsToReload = [IndexPath]()
         for (index, targetCell) in targetCells.enumerated() {
             let targetCellY = targetCell.frame.minY
 
@@ -111,8 +112,11 @@ extension DynamicTableViewController: UITableViewDelegate {
             }
 
             if (lastTargetRowHeight != targetRowsHeight[index]) {
-                self.tableView.reloadRows(at: [IndexPath(row: self.targetRows[index], section: 0)], with: .none)
+                indexPathsToReload.append(IndexPath(row: self.targetRows[index], section: 0))
             }
+        }
+        if (!indexPathsToReload.isEmpty) {
+            tableView.reloadRows(at: indexPathsToReload, with: .none)
         }
     }
 }
